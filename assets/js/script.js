@@ -75,24 +75,26 @@ for (let i = 0; i < selectItems.length; i++) {
   });
 }
 
+
 // filter variables
-const filterItems = document.querySelectorAll("[data-filter-item]");
+// const filterItems = document.querySelectorAll("[data-filter-item]");
 
-const filterFunc = function (selectedValue) {
+// const filterFunc = function (selectedValue) {
 
-  for (let i = 0; i < filterItems.length; i++) {
+//   for (let i = 0; i < filterItems.length; i++) {
 
-    if (selectedValue === "all") {
-      filterItems[i].classList.add("active");
-    } else if (selectedValue === filterItems[i].dataset.category) {
-      filterItems[i].classList.add("active");
-    } else {
-      filterItems[i].classList.remove("active");
-    }
+//     if (selectedValue === "all") {
+//       filterItems[i].classList.add("active");
+//     } else if (selectedValue === filterItems[i].dataset.category) {
+//       filterItems[i].classList.add("active");
+//     } else {
+//       filterItems[i].classList.remove("active");
+//     }
 
-  }
+//   }
 
-}
+// }
+
 
 // add event in all filter button items for large screen
 let lastClickedBtn = filterBtn[0];
@@ -157,3 +159,74 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+
+// Photography pagination
+document.addEventListener("DOMContentLoaded", function() {
+  const itemsPerPage = 6;
+  let currentPage = 1;
+  const projectItems = document.querySelectorAll('.project-item');
+  const pageInfo = document.querySelector('.page-info');
+  const prevButton = document.querySelector('.prev-page');
+  const nextButton = document.querySelector('.next-page');
+  const filterButtons = document.querySelectorAll('[data-filter-btn]');
+  let activeFilter = 'all';  // Track the currently active filter
+
+  const filterItems = document.querySelectorAll("[data-filter-item]");
+
+  function getFilteredItems() {
+    return Array.from(filterItems).filter(item => {
+      return activeFilter === 'all' || item.dataset.category === activeFilter;
+    });
+  }
+
+  function displayPage(page, filteredItems) {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = page * itemsPerPage;
+
+    // Hide all items first
+    projectItems.forEach(item => item.style.display = 'none');
+
+    // Show only the items for the current page
+    filteredItems.slice(startIndex, endIndex).forEach(item => {
+      item.style.display = 'block';
+    });
+
+    pageInfo.textContent = `Page ${page} of ${Math.ceil(filteredItems.length / itemsPerPage)}`;
+    prevButton.disabled = (page === 1);
+    nextButton.disabled = (page === Math.ceil(filteredItems.length / itemsPerPage));
+  }
+
+  function updatePagination() {
+    const filteredItems = getFilteredItems();
+    displayPage(currentPage, filteredItems);
+  }
+
+  prevButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      updatePagination();
+    }
+  });
+
+  nextButton.addEventListener('click', () => {
+    const filteredItems = getFilteredItems();
+    if (currentPage < Math.ceil(filteredItems.length / itemsPerPage)) {
+      currentPage++;
+      updatePagination();
+    }
+  });
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      activeFilter = button.textContent.trim().toLowerCase();
+      currentPage = 1; // Reset to the first page when filter changes
+      updatePagination();
+    });
+  });
+
+  // Initialize with the default filter
+  updatePagination();
+});
+
