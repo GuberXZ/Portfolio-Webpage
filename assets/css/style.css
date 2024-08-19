@@ -1788,6 +1788,42 @@ textarea.form-input::-webkit-resizer { display: none; }
 
   .project-list { grid-template-columns: repeat(3, 1fr); }
 
+   /**
+   * PHOTOGRAPY
+   */
+
+  .pagination-controls {
+    /* Ensure these styles match the base styles or adjust as needed */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 25px;
+    padding-left: 5px;
+    margin-top: 30px;
+  }
+
+  .pagination-controls button {
+    color: var(--light-gray);
+    font-size: var(--fs-5);
+    transition: var(--transition-1);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .pagination-controls button:hover {
+    color: var(--light-gray-70);
+  }
+
+  .pagination-controls button:disabled {
+    color: var(--orange-yellow-crayola);
+    cursor: not-allowed;
+  }
+
+  .pagination-controls .page-info {
+    color: var(--light-gray);
+    font-size: var(--fs-5);
+  }
 
 
   /**
@@ -1795,6 +1831,7 @@ textarea.form-input::-webkit-resizer { display: none; }
    */
 
   .blog-banner-box { height: 230px; }
+
 
 }
 
