@@ -61,39 +61,45 @@ const selectItems = document.querySelectorAll("[data-select-item]");
 const selectValue = document.querySelector("[data-selecct-value]");
 const filterBtn = document.querySelectorAll("[data-filter-btn]");
 
-select.addEventListener("click", function () { elementToggleFunc(this); });
+select.addEventListener("click", function () {
+  console.log('Select element clicked');
+  elementToggleFunc(this); 
+});
 
 // add event in all select items
-for (let i = 0; i < selectItems.length; i++) {
-  selectItems[i].addEventListener("click", function () {
-
-    let selectedValue = this.innerText.toLowerCase();
-    selectValue.innerText = this.innerText;
-    elementToggleFunc(select);
-    filterFunc(selectedValue);
-
-  });
+if (selectItems.length > 0) {
+  for (let i = 0; i < selectItems.length; i++) {
+    selectItems[i].addEventListener("click", function () {
+      console.log('Select item clicked:', this.innerText);
+      let selectedValue = this.innerText.toLowerCase();
+      selectValue.innerText = this.innerText;
+      elementToggleFunc(select);
+      filterFunc(selectedValue);
+    });
+  }
+} else {
+  console.error('Select items not found');
 }
 
 
 // filter variables
-// const filterItems = document.querySelectorAll("[data-filter-item]");
+const filterItems = document.querySelectorAll("[data-filter-item]");
 
-// const filterFunc = function (selectedValue) {
+const filterFunc = function (selectedValue) {
 
-//   for (let i = 0; i < filterItems.length; i++) {
+  for (let i = 0; i < filterItems.length; i++) {
 
-//     if (selectedValue === "all") {
-//       filterItems[i].classList.add("active");
-//     } else if (selectedValue === filterItems[i].dataset.category) {
-//       filterItems[i].classList.add("active");
-//     } else {
-//       filterItems[i].classList.remove("active");
-//     }
+    if (selectedValue === "all") {
+      filterItems[i].classList.add("active");
+    } else if (selectedValue === filterItems[i].dataset.category) {
+      filterItems[i].classList.add("active");
+    } else {
+      filterItems[i].classList.remove("active");
+    }
 
-//   }
+  }
 
-// }
+}
 
 
 // add event in all filter button items for large screen
