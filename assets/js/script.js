@@ -170,18 +170,25 @@ for (let i = 0; i < navigationLinks.length; i++) {
 document.addEventListener("DOMContentLoaded", function() {
   const itemsPerPage = 6;
   let currentPage = 1;
-  const projectItems = document.querySelectorAll('.project-item');
-  const pageInfo = document.querySelector('.page-info');
-  const prevButton = document.querySelector('.prev-page');
-  const nextButton = document.querySelector('.next-page');
-  const filterButtons = document.querySelectorAll('[data-filter-btn]');
+  const photographySection = document.querySelector('[data-page="photography"]');
+  const projectItems = photographySection.querySelectorAll('.project-item');
+  const pageInfo = photographySection.querySelector('.page-info');
+  const prevButton = photographySection.querySelector('.prev-page');
+  const nextButton = photographySection.querySelector('.next-page');
+  const firstButton = photographySection.querySelector('.first-page');
+  const lastButton = photographySection.querySelector('.last-page');
+  const filterButtons = photographySection.querySelectorAll('[data-filter-btn]');
+  const searchBar = document.getElementById('search-bar');
   let activeFilter = 'all';  // Track the currently active filter
+  let searchTerm = ''; // Track the current search term
 
-  const filterItems = document.querySelectorAll("[data-filter-item]");
+  const filterItems = photographySection.querySelectorAll("[data-filter-item]");
 
   function getFilteredItems() {
     return Array.from(filterItems).filter(item => {
-      return activeFilter === 'all' || item.dataset.category === activeFilter;
+      const matchesFilter = activeFilter === 'all' || item.dataset.category === activeFilter;
+      const matchesSearch = item.querySelector('.project-title').textContent.toLowerCase().includes(searchTerm);
+      return matchesFilter && matchesSearch;
     });
   }
 
@@ -193,13 +200,15 @@ document.addEventListener("DOMContentLoaded", function() {
     projectItems.forEach(item => item.style.display = 'none');
 
     // Show only the items for the current page
-    filteredItems.slice(startIndex, endIndex).forEach(item => {
+    filteredItems.slice(startIndex, endIndex).forEach((item, index) => {
       item.style.display = 'block';
     });
 
     pageInfo.textContent = `Page ${page} of ${Math.ceil(filteredItems.length / itemsPerPage)}`;
     prevButton.disabled = (page === 1);
     nextButton.disabled = (page === Math.ceil(filteredItems.length / itemsPerPage));
+    firstButton.disabled = (page === 1);
+    lastButton.disabled = (page === Math.ceil(filteredItems.length / itemsPerPage));
   }
 
   function updatePagination() {
@@ -230,6 +239,23 @@ document.addEventListener("DOMContentLoaded", function() {
       currentPage = 1; // Reset to the first page when filter changes
       updatePagination();
     });
+  });
+
+  firstButton.addEventListener('click', () => {
+    currentPage = 1;
+    updatePagination();
+  });
+  
+  lastButton.addEventListener('click', () => {
+    const filteredItems = getFilteredItems();
+    currentPage = Math.ceil(filteredItems.length / itemsPerPage);
+    updatePagination();
+  });
+
+  searchBar.addEventListener('input', () => {
+    searchTerm = searchBar.value.toLowerCase();
+    currentPage = 1; // Reset to the first page when search term changes
+    updatePagination();
   });
 
   // Initialize with the default filter
