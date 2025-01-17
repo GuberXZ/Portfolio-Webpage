@@ -1,11 +1,10 @@
 'use strict';
 
-
+// script.js
+import projects from './photo-items.js';
 
 // element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
-
-
 
 // sidebar variables
 const sidebar = document.querySelector("[data-sidebar]");
@@ -13,7 +12,6 @@ const sidebarBtn = document.querySelector("[data-sidebar-btn]");
 
 // sidebar toggle functionality for mobile
 sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
-
 
 
 // testimonials variables
@@ -168,21 +166,48 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
 // Photography pagination
 document.addEventListener("DOMContentLoaded", function() {
-  const itemsPerPage = 6;
-  let currentPage = 1;
   const photographySection = document.querySelector('[data-page="photography"]');
-  const projectItems = photographySection.querySelectorAll('.project-item');
-  const pageInfo = photographySection.querySelector('.page-info');
-  const prevButton = photographySection.querySelector('.prev-page');
-  const nextButton = photographySection.querySelector('.next-page');
-  const firstButton = photographySection.querySelector('.first-page');
-  const lastButton = photographySection.querySelector('.last-page');
-  const filterButtons = photographySection.querySelectorAll('[data-filter-btn]');
-  const searchBar = document.getElementById('search-bar');
-  let activeFilter = 'all';  // Track the currently active filter
-  let searchTerm = ''; // Track the current search term
+  const projectList        = photographySection.querySelector('.project-list');
+  
+  // Generate project items dynamically
+  projects.forEach(project => {
+    const projectItem = document.createElement('li');
+    projectItem.classList.add('project-item', 'active');
+    projectItem.setAttribute('data-filter-item', '');
+    projectItem.setAttribute('data-category', project.category);
 
-  const filterItems = photographySection.querySelectorAll("[data-filter-item]");
+    projectItem.innerHTML = `
+      <a href="${project.link}" target="_blank">
+        <figure class="project-img">
+          <div class="project-item-icon-box">
+            <ion-icon name="${project.icon}"></ion-icon>
+          </div>
+          <img src="${project.imgSrc}" alt="${project.imgAlt}" loading="lazy">
+        </figure>
+        <h3 class="project-title"><i>${project.title}</i></h3>
+        <p class="project-category">${project.category.charAt(0).toUpperCase() + project.category.slice(1)}</p>
+      </a>
+    `;
+
+    projectList.appendChild(projectItem);
+  });
+  
+  let currentPage = 1;
+  const itemsPerPage = 6;
+  const projectItems       = photographySection.querySelectorAll('.project-item');
+  const pageInfo           = photographySection.querySelector('.page-info');
+  const prevButton         = photographySection.querySelector('.prev-page');
+  const nextButton         = photographySection.querySelector('.next-page');
+  const firstButton        = photographySection.querySelector('.first-page');
+  const lastButton         = photographySection.querySelector('.last-page');
+  const filterButtons      = photographySection.querySelectorAll('[data-filter-btn]');
+  const filterItems        = photographySection.querySelectorAll("[data-filter-item]");
+  const searchBar          = document.getElementById('search-bar');
+  let activeFilter         = 'all';  // Track the currently active filter
+  let searchTerm           = ''; // Track the current search term
+
+  
+
 
   function getFilteredItems() {
     return Array.from(filterItems).filter(item => {
